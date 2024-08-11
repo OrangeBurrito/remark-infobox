@@ -1,0 +1,23 @@
+{
+  "name": "mdast-util-infobox",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "module": "src/index.ts",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/hast": "^3.0.4",
+    "@types/mdast": "^4.0.4",
+    "@types/unist": "^3.0.2",
+    "mdast-util-from-markdown": "^2.0.1",
+    "mdast-util-to-hast": "^13.2.0",
+    "tsup": "^8.2.4",
+    "unist-builder": "^4.0.0"
+  }
+}

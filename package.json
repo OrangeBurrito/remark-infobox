@@ -1,0 +1,21 @@
+{
+  "name": "remark-infobox",
+  "module": "index.ts",
+  "type": "module",
+  "devDependencies": {
+    "@types/bun": "^1.1.6",
+    "micromark-factory-space": "^2.0.0",
+    "micromark-util-character": "^2.1.0",
+    "micromark-util-symbol": "^2.0.0",
+    "micromark-util-types": "^2.0.0",
+    "unified": "^11.0.5",
+    "unist-builder": "^4.0.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "mdast-util-infobox": "link:mdast-util-infobox",
+    "micromark-extension-infobox": "link:micromark-extension-infobox"
+  }
+}

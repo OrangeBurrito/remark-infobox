@@ -1,0 +1,21 @@
+{
+  "name": "micromark-extension-infobox",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "module": "src/index.ts",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "peerDependencies": {
+    "micromark": "^4.0.0"
+  },
+  "devDependencies": {
+    "micromark-util-symbol": "^2.0.0",
+    "tsup": "^8.2.4"
+  }
+}
