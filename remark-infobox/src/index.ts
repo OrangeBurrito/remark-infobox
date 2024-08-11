@@ -3,7 +3,7 @@ import { infoboxFromMarkdown} from 'mdast-util-infobox';
 import type { Processor } from 'unified';
 
 export default function remarkInfobox(this: Processor) {
-    const data = this.data()
+    const data: any = this.data()
 
     const micromarkExtensions = data.micromarkExtensions ?? (data.micromarkExtensions = [])
     const fromMarkdownExtensions = data.fromMarkdownExtensions ?? (data.fromMarkdownExtensions = [])

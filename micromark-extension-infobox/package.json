@@ -15,7 +15,13 @@
     "micromark": "^4.0.0"
   },
   "devDependencies": {
+    "micromark-factory-space": "^2.0.0",
+    "micromark-util-character": "^2.1.0",
     "micromark-util-symbol": "^2.0.0",
+    "micromark-util-types": "^2.0.0",
     "tsup": "^8.2.4"
+  },
+  "dependencies": {
+    "typescript": "^5.5.4"
   }
 }
