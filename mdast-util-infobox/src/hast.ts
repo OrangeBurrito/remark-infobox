@@ -39,9 +39,6 @@ const mdastInfoboxRowKeyToHast: Handler = (state, node: InfoboxRowKey): Element 
     const nodes = state.all(node)
     const key = (nodes[0] as any).value
 
-    if (accumulatedKeys.includes(key)) {
-        throw new Error('Duplicate key in infobox')
-    }
     if (key in InfoboxKeys) {
         if (key === InfoboxKeys[InfoboxKeys.caption]) {
             if (currentParam !== InfoboxKeys[InfoboxKeys.image]) {
@@ -66,12 +63,15 @@ const mdastInfoboxRowValueToHast: Handler = (state, node: InfoboxRowValue) => {
         const nodes = state.all(node)
         // @ts-ignore
         if (currentParam === InfoboxKeys[InfoboxKeys.image] && nodes[0].tagName !== 'img') {
+            let imgSrc = nodes[1]?.tagName === 'a' ? nodes[1]?.properties.href : nodes[0].value
             nodes[0] = {
                 type: 'element',
                 tagName: 'img',
                 children: [],
-                // @ts-ignore
-                properties: { src: nodes[0].value, alt: nodes[0].value }
+                properties: { src: imgSrc, alt: imgSrc, width: 200 }
+            }
+            if (nodes[1]) {
+                nodes.pop()
             }
         }
         return { type: 'element', tagName: 'th', children: nodes, properties: { id: currentParam, colspan: 2 } }
