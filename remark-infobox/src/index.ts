@@ -1,6 +1,6 @@
+import type { Processor } from 'unified';
 import { infobox } from 'micromark-extension-infobox';
 import { infoboxFromMarkdown} from 'mdast-util-infobox';
-import type { Processor } from 'unified';
 
 export default function remarkInfobox(this: Processor) {
     const data: any = this.data()

@@ -1,6 +1,6 @@
 {
   "name": "mdast-util-infobox",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "",
   "type": "module",
   "module": "src/index.ts",
@@ -20,6 +20,7 @@
     "@types/unist": "^3.0.2",
     "mdast-util-from-markdown": "^2.0.1",
     "mdast-util-to-hast": "^13.2.0",
+    "micromark-extension-infobox": "^1.0.4",
     "tsup": "^8.2.4",
     "typescript": "^5.5.4"
   }

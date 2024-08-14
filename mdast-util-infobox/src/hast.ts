@@ -2,12 +2,7 @@ import type { Element, ElementContent } from 'hast'
 import type { Handler } from 'mdast-util-to-hast';
 import { u } from 'unist-builder';
 import type { InfoboxNode, InfoboxRow, InfoboxRowKey, InfoboxRowValue } from './types.js';
-
-enum InfoboxKeys {
-    'title',
-    'image',
-    'caption'
-}
+import { InfoboxKeys } from 'micromark-extension-infobox/src/index.js';
 
 const mdastInfoboxToHast: Handler = (state, node: InfoboxNode) => {
     const rows = state.all(node)
@@ -62,16 +57,12 @@ const mdastInfoboxRowValueToHast: Handler = (state, node: InfoboxRowValue) => {
     if (currentParam.length > 0) {
         const nodes = state.all(node)
         // @ts-ignore
-        if (currentParam === InfoboxKeys[InfoboxKeys.image] && nodes[0].tagName !== 'img') {
-            let imgSrc = nodes[1]?.tagName === 'a' ? nodes[1]?.properties.href : nodes[0].value
+        if (currentParam === InfoboxKeys[InfoboxKeys.image]) {
             nodes[0] = {
                 type: 'element',
                 tagName: 'img',
                 children: [],
-                properties: { src: imgSrc, alt: imgSrc, width: 200 }
-            }
-            if (nodes[1]) {
-                nodes.pop()
+                properties: { src: nodes[0].value, alt: nodes[0].value, width: 200 }
             }
         }
         return { type: 'element', tagName: 'th', children: nodes, properties: { id: currentParam, colspan: 2 } }

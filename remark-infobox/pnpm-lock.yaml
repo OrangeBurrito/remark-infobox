@@ -6,11 +6,11 @@ settings:
 
 dependencies:
   mdast-util-infobox:
-    specifier: ^1.0.2
-    version: 1.0.2
+    specifier: ^1.0.4
+    version: 1.0.4
   micromark-extension-infobox:
-    specifier: ^1.0.2
-    version: 1.0.2(micromark@4.0.0)
+    specifier: ^1.0.4
+    version: 1.0.4(micromark@4.0.0)
   typescript:
     specifier: ^5.0.0
     version: 5.0.2
@@ -873,8 +873,8 @@ packages:
     resolution: {integrity: sha512-JNAzZcXrCt42VGLuYz0zfAzDfAvJWW6AfYlDBQyDV5DClI2m5sAmK+OIO7s59XfsRsWHp02jAJrRadPRGTt6SQ==}
     dev: true
 
-  /mdast-util-infobox@1.0.2:
-    resolution: {integrity: sha512-WgmVElrk6qqyumyQkWA+ybnq3ggaT++S5zzuY4BironLjjQSOZB9Df9qdb2BYWfB6UpYAddzrbF3XvA01vgNUg==}
+  /mdast-util-infobox@1.0.4:
+    resolution: {integrity: sha512-KMYLaolkRHBgPrJjpr0yOkoeToVYhdG+KEBcSfvao10BWaQP1+kXD+NpWMUVCPlUxUJGfAveGkKX1vh6jlb02Q==}
     dependencies:
       unist-builder: 4.0.0
     dev: false
@@ -909,8 +909,8 @@ packages:
       micromark-util-types: 2.0.0
     dev: false
 
-  /micromark-extension-infobox@1.0.2(micromark@4.0.0):
-    resolution: {integrity: sha512-i7DfVMd6RG/nrq3JmryIid4Tzqu11rvaD47BggcAuiUA633lgplFh0Xu9ugmubp3vMIejfbpGLghU5w1yJRZhw==}
+  /micromark-extension-infobox@1.0.4(micromark@4.0.0):
+    resolution: {integrity: sha512-F43AP4DO1xoBTTHZWaLnCZ9PxtGJaBpX6VZckp9CdfniReb+UZ5runWnNRXz7wBjOuPw2oOw8xX/kwuMtjdE2A==}
     peerDependencies:
       micromark: ^4.0.0
     dependencies:

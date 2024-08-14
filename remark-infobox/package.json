@@ -1,6 +1,6 @@
 {
   "name": "remark-infobox",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "remark plugin to support Mediawiki-like infoboxes.",
   "type": "module",
   "module": "src/index.ts",
@@ -17,7 +17,7 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "mdast-util-infobox": "^1.0.3",
-    "micromark-extension-infobox": "^1.0.2"
+    "mdast-util-infobox": "^1.0.4",
+    "micromark-extension-infobox": "^1.0.4"
   }
 }

@@ -25,6 +25,9 @@ devDependencies:
   mdast-util-to-hast:
     specifier: ^13.2.0
     version: 13.2.0
+  micromark-extension-infobox:
+    specifier: ^1.0.4
+    version: 1.0.4(micromark@4.0.0)
   tsup:
     specifier: ^8.2.4
     version: 8.2.4(typescript@5.5.4)
@@ -927,6 +930,15 @@ packages:
       micromark-util-subtokenize: 2.0.1
       micromark-util-symbol: 2.0.0
       micromark-util-types: 2.0.0
+    dev: true
+
+  /micromark-extension-infobox@1.0.4(micromark@4.0.0):
+    resolution: {integrity: sha512-F43AP4DO1xoBTTHZWaLnCZ9PxtGJaBpX6VZckp9CdfniReb+UZ5runWnNRXz7wBjOuPw2oOw8xX/kwuMtjdE2A==}
+    peerDependencies:
+      micromark: ^4.0.0
+    dependencies:
+      micromark: 4.0.0
+      typescript: 5.5.4
     dev: true
 
   /micromark-factory-destination@2.0.0:

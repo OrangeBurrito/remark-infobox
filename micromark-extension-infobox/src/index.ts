@@ -4,6 +4,12 @@ import { constants, types } from "micromark-util-symbol";
 import { factorySpace } from "micromark-factory-space";
 import { tokenTypes } from "./types.js";
 
+export const enum InfoboxKeys {
+    'title',
+    'image',
+    'caption'
+}
+
 function infoboxTokenizer(this: TokenizeContext, effects: Effects, ok: State, nok: State): State {
     const parseMarker = (effects: Effects, marker: number, ok: State, exit = false): State => {
         const inner: State = (code: Code) => {
@@ -58,26 +64,51 @@ function infoboxTokenizer(this: TokenizeContext, effects: Effects, ok: State, no
         return inside
     }
 
-    const row = (code: Code) => {
+    
+    let key = ''
+    const rowStart: State = (code: Code) => {
+        effects.enter(tokenTypes.infoboxRowKey)
+        effects.enter(types.chunkText, {contentType: constants.contentTypeText})
+        effects.consume(code)
+        key += String.fromCharCode(code)
+        return rowKey
+    }
+    
+    const rowKey = (code: Code) => {
         if (code === 61) {
             effects.exit(types.chunkText)
             effects.exit(tokenTypes.infoboxRowKey)
             effects.enter(tokenTypes.infoboxRowValue)
             effects.consume(code)
-            effects.enter(types.chunkText, {contentType: constants.contentTypeText})
-            return rowValue
+            return factorySpace(effects, rowValueStart, types.whitespace)
+        }
+        if (!markdownSpace(code)) {
+            key += String.fromCharCode(code)
         }
         effects.consume(code)
-        return row
+        return rowKey
     }
 
+    const rowValueStart = (code: Code) => {
+        if (key in InfoboxKeys) {
+            effects.enter(types.chunkString, {contentType: constants.contentTypeString})
+        } else {
+            effects.enter(types.chunkText, {contentType: constants.contentTypeText})
+        }
+        return rowValue(code)
+    }
 
     const rowValue = (code: Code) => {
         if (!markdownLineEnding(code)) {
             effects.consume(code)
             return rowValue
         }
-        effects.exit(types.chunkText)
+        if (key in InfoboxKeys) {
+            effects.exit(types.chunkString)
+        } else {
+            effects.exit(types.chunkText)
+        }
+        key = ''
         effects.exit(tokenTypes.infoboxRowValue)
         effects.exit(tokenTypes.infoboxRow)
         effects.enter(types.lineEnding)
@@ -85,17 +116,6 @@ function infoboxTokenizer(this: TokenizeContext, effects: Effects, ok: State, no
         effects.exit(types.lineEnding)
         effects.enter(tokenTypes.infoboxRow)
         return inside
-    }
-
-    const rowStart: State = (code: Code) => {
-        if (markdownSpace(code)) {
-            effects.consume(code)
-            return rowStart
-        }
-        effects.enter(tokenTypes.infoboxRowKey)
-        effects.enter(types.chunkText, {contentType: constants.contentTypeText})
-        effects.consume(code)
-        return row
     }
 
     const inside = (code: Code) => {
@@ -107,7 +127,7 @@ function infoboxTokenizer(this: TokenizeContext, effects: Effects, ok: State, no
         }
         if (code === 124) {
             effects.consume(code)
-            return rowStart
+            return factorySpace(effects, rowStart, types.whitespace)
         } 
         effects.consume(code)
         return inside
