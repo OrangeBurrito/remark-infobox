@@ -26,10 +26,10 @@ let currentParam: string = ''
 
 const mdastInfoboxRowToHast: Handler = (state, node: InfoboxRow) => {
     const nodes = state.all(node)
-    const children = []
+    const children: ElementContent[] = []
     for (let i = 0; i < nodes.length; i++) {
         children.push(u('text', '\n\t\t'))
-        children.push(nodes[i])
+        children.push(nodes[i] ?? u('text', ''))
     }
     children.push(u('text', '\n\t'))
     return { type: 'element', tagName: 'tr', children, properties: { className: 'infobox-row'} } as Element
@@ -74,7 +74,7 @@ const mdastInfoboxRowValueToHast: Handler = (state, node: InfoboxRowValue) => {
                 properties: { src: nodes[0].value, alt: nodes[0].value }
             }
         }
-        return { type: 'element', tagName: 'th', children: nodes, properties: { id: currentParam } }
+        return { type: 'element', tagName: 'th', children: nodes, properties: { id: currentParam, colspan: 2 } }
     }
     return { type: 'element', tagName: 'td', children: state.all(node), properties: {} }
 }

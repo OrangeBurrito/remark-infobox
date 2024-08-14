@@ -5,104 +5,114 @@ import { factorySpace } from "micromark-factory-space";
 import { tokenTypes } from "./types.js";
 
 function infoboxTokenizer(this: TokenizeContext, effects: Effects, ok: State, nok: State): State {
-    const matchKeyword = (effects: Effects, ok: State, keyword: string): State => {
-        let string: string[] = []
-        const match: State = (code: Code) => {
-            if (string.length < keyword.length && asciiAlpha(code)) {
-                string.push(String.fromCharCode(code || 0))
-                effects.consume(code)
-                return match
-            }
-            if (string.join('') !== keyword) {
-                return nok(code)
-            }
-            return ok(code)
-        }
-        return match
-    }
-
-    const parseMarker = (effects: Effects, marker: number, ok: State): State => {
+    const parseMarker = (effects: Effects, marker: number, ok: State, exit = false): State => {
         const inner: State = (code: Code) => {
-                effects.consume(code)
-                if (code !== marker) return nok(code)
-                return ok
+            if (code !== marker) return nok(code)
+            effects.consume(code)
+            effects.exit(tokenTypes.infoboxMarker)
+            if (exit) effects.exit(tokenTypes.infobox)
+            return ok
         }
         return inner
     }
 
-    const start: State = (code: Code) => {
+    const matchKeyword = (effects: Effects, ok: State, keyword: string): State => {
+        let text: string[] = []
+
+        const start: State = (code: Code) => {
+            effects.enter(types.chunkString)
+            return match(code)
+        }
+        const match: State = (code: Code) => {
+            if (text.length < keyword.length && asciiAlpha(code)) {
+                text.push(String.fromCharCode(code || 0))
+                effects.consume(code)
+                return match
+            }
+            effects.exit(types.chunkString)
+            if (text.join('') !== keyword)  return nok(code)
+            return ok(code)
+        }
+
+        return start
+    }
+
+    const start = (code: Code) => {
         effects.enter(tokenTypes.infobox)
         effects.enter(tokenTypes.infoboxMarker)
         effects.consume(code)
-        return parseMarker(effects, 123, startText)
+        return parseMarker(effects, 123, textStart)
     }
 
-    const startText: State = (code: Code) => {
+    const textStart = (code: Code) => {
         if (markdownSpace(code)) {
-            return factorySpace(effects, startText, types.linePrefix)
+            return factorySpace(effects, textStart, types.whitespace)(code)
         }
         if (!markdownLineEnding(code)) {
-            return matchKeyword(effects, startText, 'infobox')
+            return matchKeyword(effects, textStart, 'infobox')(code)
         }
-        effects.exit(tokenTypes.infoboxMarker)
         effects.enter(types.lineEnding)
         effects.consume(code)
         effects.exit(types.lineEnding)
+        effects.enter(tokenTypes.infoboxRow)
         return inside
     }
 
-    const beforeRowStart: State = (code: Code) => {
-        if (markdownSpace(code)) {
-            return factorySpace(effects, beforeRowStart, types.linePrefix)
-        }
-        effects.enter(tokenTypes.infoboxRow)
-        effects.enter(tokenTypes.infoboxRowKey)
-        effects.enter(types.chunkText, {contentType: constants.contentTypeText})
-        return parseRow
-    }
-
-    let atRowDivider = false
-    const parseRow: State = (code: Code) => {
-        if (markdownLineEnding(code)) {
-            effects.exit(types.chunkText)
-            effects.exit(tokenTypes.infoboxRowValue)
-            effects.exit(tokenTypes.infoboxRow)
-            effects.enter(types.lineEnding)
-            effects.consume(code)
-            effects.exit(types.lineEnding)
-            return inside
-        }
+    const row = (code: Code) => {
         if (code === 61) {
             effects.exit(types.chunkText)
             effects.exit(tokenTypes.infoboxRowKey)
-            effects.consume(code)
-            atRowDivider = true
-            return factorySpace(effects, parseRow, types.linePrefix)
-        }
-        if (atRowDivider) {
             effects.enter(tokenTypes.infoboxRowValue)
+            effects.consume(code)
             effects.enter(types.chunkText, {contentType: constants.contentTypeText})
-            atRowDivider = false
+            return rowValue
         }
         effects.consume(code)
-        return parseRow
+        return row
     }
 
-    const inside: State = (code: Code) => {
-        if (code === 125) {
-            effects.enter(tokenTypes.infoboxMarker)
+
+    const rowValue = (code: Code) => {
+        if (!markdownLineEnding(code)) {
             effects.consume(code)
-            effects.exit(tokenTypes.infoboxMarker)
-            effects.exit(tokenTypes.infobox)
-            return parseMarker(effects, 125, ok)
+            return rowValue
         }
-        if (code !== 124) {
-            return nok(code)
-        } else {
-            effects.consume(code)
-            return beforeRowStart
-        }
+        effects.exit(types.chunkText)
+        effects.exit(tokenTypes.infoboxRowValue)
+        effects.exit(tokenTypes.infoboxRow)
+        effects.enter(types.lineEnding)
+        effects.consume(code)
+        effects.exit(types.lineEnding)
+        effects.enter(tokenTypes.infoboxRow)
+        return inside
     }
+
+    const rowStart: State = (code: Code) => {
+        if (markdownSpace(code)) {
+            effects.consume(code)
+            return rowStart
+        }
+        effects.enter(tokenTypes.infoboxRowKey)
+        effects.enter(types.chunkText, {contentType: constants.contentTypeText})
+        effects.consume(code)
+        return row
+    }
+
+    const inside = (code: Code) => {
+        if (code === 125) {
+            effects.consume(code)
+            effects.exit(tokenTypes.infoboxRow)
+            effects.enter(tokenTypes.infoboxMarker)
+            return parseMarker(effects, 125, ok, true)
+        }
+        if (code === 124) {
+            effects.consume(code)
+            return rowStart
+        } 
+        effects.consume(code)
+        return inside
+    }
+
     return start
 }
 
