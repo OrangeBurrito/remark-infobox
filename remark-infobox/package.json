@@ -1,6 +1,6 @@
 {
   "name": "remark-infobox",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "remark plugin to support Mediawiki-like infoboxes.",
   "type": "module",
   "module": "src/index.ts",
