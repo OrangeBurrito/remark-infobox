@@ -1,5 +1,5 @@
 import type { Processor } from 'unified';
-import { infobox } from 'micromark-extension-infobox';
+import infobox from 'micromark-extension-infobox';
 import { infoboxFromMarkdown} from 'mdast-util-infobox';
 
 export default function remarkInfobox(this: Processor) {

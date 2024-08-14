@@ -136,6 +136,8 @@ function infoboxTokenizer(this: TokenizeContext, effects: Effects, ok: State, no
     return start
 }
 
-export function infobox(): Extension {
+function infobox(): Extension {
     return {flow: {123: {name: 'infobox', tokenize: infoboxTokenizer}}}
 }
+
+export default infobox
